@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="Destruction"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/main_menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Manager="*res://scripts/manager.gd"
 
 [display]
 

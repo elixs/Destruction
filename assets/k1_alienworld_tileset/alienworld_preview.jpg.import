@@ -1,0 +1,35 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/alienworld_preview.jpg-5f3ea6a938ab68087b65c600b8c29163.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://assets/k1_alienworld_tileset/alienworld_preview.jpg"
+dest_files=[ "res://.import/alienworld_preview.jpg-5f3ea6a938ab68087b65c600b8c29163.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=0
+flags/filter=false
+flags/mipmaps=false
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+process/normal_map_invert_y=false
+stream=false
+size_limit=0
+detect_3d=false
+svg/scale=1.0

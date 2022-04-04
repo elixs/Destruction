@@ -11,6 +11,7 @@ onready var playback = anim_tree.get("parameters/playback")
 onready var pivot = $Pivot
 onready var feet = $Feetlo
 onready var melee_area = $Pivot/MeleeArea
+onready var camera = $Camera2D
 
 var Block = preload("res://scenes/Block.tscn")
 var Dust = preload("res://scenes/Dust.tscn")
@@ -21,8 +22,11 @@ export var attacking = false
 func _ready():
 	anim_tree.active = true
 	attacking = false
-	
+	# camera.set_as_toplevel(true)
 	melee_area.connect("body_entered", self, "_on_melee_area_entered")
+	
+	Manager.meh = 3
+	Manager.player = self
 
 func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -68,6 +72,10 @@ func _physics_process(delta):
 		pivot.scale.x = 1
 	if Input.is_action_pressed("move_left") and not Input.is_action_pressed("move_right"):
 		pivot.scale.x = -1
+	
+	
+	# manual camera smoothing
+	# camera.global_position = lerp(camera.global_position, global_position, 0.1)
 
 
 func land():
