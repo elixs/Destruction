@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://assets/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png" type="Texture" id=1]
 [ext_resource path="res://assets/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Run.png" type="Texture" id=2]
@@ -6,7 +6,8 @@
 [ext_resource path="res://assets/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Fall.png" type="Texture" id=4]
 [ext_resource path="res://assets/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_AttackNoMovement.png" type="Texture" id=5]
 [ext_resource path="res://assets/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Jump.png" type="Texture" id=6]
-[ext_resource path="res://icon.png" type="Texture" id=7]
+[ext_resource path="res://resources/theme.tres" type="Theme" id=7]
+[ext_resource path="res://scenes/pause_menu.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=34]
 extents = Vector2( 34, 40 )
@@ -472,6 +473,7 @@ graph_offset = Vector2( -373.5, 153.721 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=10]
 
 [node name="Borichan" type="KinematicBody2D" groups=["player"]]
+collision_layer = 3
 collision_mask = 0
 script = ExtResource( 3 )
 
@@ -526,6 +528,12 @@ smoothing_enabled = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Icon" type="Sprite" parent="CanvasLayer"]
-position = Vector2( 44, 43 )
-texture = ExtResource( 7 )
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 170.0
+margin_bottom = 40.0
+theme = ExtResource( 7 )
+percent_visible = false
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource( 8 )]

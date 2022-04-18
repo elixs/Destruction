@@ -4,6 +4,9 @@ var SPEED = 100
 var ACCELERATION = 500
 var GRAVITY = 400
 
+var health = 100 setget set_health
+var max_health = 100
+
 var velocity = Vector2()
 
 onready var anim_tree = $AnimationTree
@@ -12,6 +15,7 @@ onready var pivot = $Pivot
 onready var feet = $Feetlo
 onready var melee_area = $Pivot/MeleeArea
 onready var camera = $Camera2D
+onready var health_bar = $CanvasLayer/HealthBar
 
 var Block = preload("res://scenes/Block.tscn")
 var Dust = preload("res://scenes/Dust.tscn")
@@ -27,6 +31,8 @@ func _ready():
 	
 	Manager.meh = 3
 	Manager.player = self
+	
+	health_bar.value = health
 
 func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -93,3 +99,12 @@ func _place():
 	var block = Block.instance()
 	get_parent().add_child(block)
 	block.global_position = get_global_mouse_position()
+
+
+func take_damage(instigator: Node2D):
+	self.health -= 10
+
+
+func set_health(value):
+	health = value
+	health_bar.value = health
