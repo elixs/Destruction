@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 var SPEED = 100
+var CROUCH_SPEED = 50
 var ACCELERATION = 500
 var GRAVITY = 400
 
@@ -16,11 +17,15 @@ onready var feet = $Feetlo
 onready var melee_area = $Pivot/MeleeArea
 onready var camera = $Camera2D
 onready var health_bar = $CanvasLayer/HealthBar
+onready var collision_shape = $CollisionShape2D
+onready var crouch_ray_casts = $RayCasts
 
 var Block = preload("res://scenes/Block.tscn")
 var Dust = preload("res://scenes/Dust.tscn")
 
 export var attacking = false
+
+var crouched = false
 
 
 func _ready():
@@ -42,16 +47,37 @@ func _physics_process(delta):
 	if attacking:
 		move_input = 0
 	
-	velocity.x = move_toward(velocity.x, move_input * SPEED, ACCELERATION)
-
+	var move_speed = CROUCH_SPEED if crouched else SPEED
 	
+	velocity.x = move_toward(velocity.x, move_input * move_speed, ACCELERATION)
+
 	velocity.y += GRAVITY * delta
+	
+	if Input.is_action_just_pressed("crouch"):
+		crouched = true
+		# var capsule: CapsuleShape2D = collision_shape.shape
+		# (collision_shape.shape as CapsuleShape2D).radius
+		# collision_shape.shape.radius = algo
+		for ray_cast in crouch_ray_casts.get_children():
+			ray_cast.enabled = true
+	
+	if not Input.is_action_pressed("crouch"):
+		
+		var not_ray_cast_colliding = true
+		for ray_cast in crouch_ray_casts.get_children():
+			if ray_cast.is_colliding():
+				not_ray_cast_colliding = false
+				break
+		if not_ray_cast_colliding:
+			crouched = false
+			for ray_cast in crouch_ray_casts.get_children():
+				ray_cast.enabled = false
 	
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = -2 * SPEED
 	
 	var melee = false
-	if Input.is_action_just_pressed("attack"):
+	if not crouched and Input.is_action_just_pressed("attack"):
 		playback.travel("melee")
 		melee = true
 	
@@ -63,10 +89,16 @@ func _physics_process(delta):
 	
 	if not melee:
 		if is_on_floor():
-			if abs(velocity.x) > 10:
-				playback.travel("run")
+			if crouched:
+				if abs(velocity.x) > 10:
+					playback.travel("crouch_walk")
+				else:
+					playback.travel("crouch")
 			else:
-				playback.travel("idle")
+				if abs(velocity.x) > 10:
+					playback.travel("run")
+				else:
+					playback.travel("idle")
 		else:
 			if velocity.y > 0:
 				playback.travel("fall")
