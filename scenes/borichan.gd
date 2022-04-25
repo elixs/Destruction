@@ -38,9 +38,12 @@ func _ready():
 	Manager.player = self
 	
 	health_bar.value = health
+	
+	if Manager.checkpoint_position:
+		global_position = Manager.checkpoint_position
 
 func _physics_process(delta):
-	velocity = move_and_slide(velocity, Vector2.UP)
+	velocity = move_and_slide(velocity, Vector2.UP, false, 4, PI / 4, false)
 	
 	var move_input = Input.get_axis("move_left", "move_right")
 	
@@ -74,7 +77,7 @@ func _physics_process(delta):
 				ray_cast.enabled = false
 	
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		velocity.y = -2 * SPEED
+		velocity.y = -4 * SPEED
 	
 	var melee = false
 	if not crouched and Input.is_action_just_pressed("attack"):
@@ -134,9 +137,17 @@ func _place():
 
 
 func take_damage(instigator: Node2D):
-	self.health -= 10
+	self.health -= 50
 
 
 func set_health(value):
-	health = value
+	health = clamp(value, 0, max_health)
 	health_bar.value = health
+	if health == 0:
+		# get_tree().reload_current_scene()
+		_respawn()
+
+
+func _respawn():
+	global_position = Manager.checkpoint_position
+	self.health = max_health
